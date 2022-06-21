@@ -1,2 +1,3 @@
-# TOP_Tik-Tak-Toe-Project
-Tik Tak Toe game for TOP
+# TOP_Tic-Tac-Toe-Project
+
+### Tic Tac Toe game for TOP
