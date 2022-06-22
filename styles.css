@@ -5,5 +5,54 @@
 }
 
 body {
-  background-color: #eee;
+  background-color: rgb(224, 224, 224);
+
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50px;
+  background: linear-gradient(145deg, #cacaca, #f0f0f0);
+  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 1px;
+
+  height: 400px;
+  width: 400px;
+  border-radius: 10px;
+}
+
+.players-container {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 20px;
+}
+
+.game-board {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+}
+
+.options-button {
+  display: flex;
 }
