@@ -29,6 +29,29 @@ body {
   box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
 }
 
+.players-container {
+  display: flex;
+
+  align-self: stretch;
+
+  color: #30336b;
+  margin: 20px 0;
+  font-size: 1.2rem;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.player-info {
+  flex: 0 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-name {
+  font-size: 1.8rem;
+}
+
 .game-board {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -55,9 +78,21 @@ body {
 }
 
 .cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 0;
+  font-family: 'Acme', sans-serif;
+  /* color: #059669; */
+  color: #30336b;
+  font-size: 4rem;
   border-radius: 30px;
   background: #e0e0e0;
   box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
+
+.cell-red {
+  /* color: #e11d48; */
 }
 
 .options-button {
