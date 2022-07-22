@@ -12,8 +12,38 @@ html {
 }
 
 body {
-  font-family: 'rubik', sans-serif;
   line-height: 1;
   font-weight: 400;
   color: #555;
+}
+
+.container {
+  display: flex;
+
+  /* 1140px */
+  max-width: 120rem;
+  padding: 0 3.2rem;
+  margin: 0 auto;
+
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  margin-top: 2rem;
+  font-size: 8rem;
+}
+
+.players {
+  display: flex;
+  font-size: 3rem;
+  gap: 3rem;
+}
+
+.player {
+  flex-grow: 1;
+}
+
+.game {
+  display: grid;
 }
