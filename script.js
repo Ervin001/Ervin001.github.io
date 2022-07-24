@@ -2,6 +2,7 @@
 
 const playerOne = document.querySelector('.player-one');
 const playerTwo = document.querySelector('.player-two');
+const cells = document.querySelectorAll('[data-cell]');
 
 function Player(name, marker) {
   let nameU = name.toUpperCase();
@@ -14,22 +15,47 @@ function Player(name, marker) {
 
 const tom = Player('tom', 'x');
 const comp = Player('Computer', 'o');
-let scores = [0, 0];
-let currentScore = 0;
-let activePlayer = 0;
-let playing = true;
-let bothPlayers = [one, two];
+let scores, currentScore, activePlayer, playing;
 
+// Game Factory
 const game = ((one, two) => {
+  let bothPlayers = [one, two];
   let gameBoard = [, , , , , , , ,];
+  scores = [0, 0];
+  currentScore = 0;
+  playing = true;
+  activePlayer = 0;
+
+  function changePlayer() {
+    activePlayer = activePlayer === 0 ? 1 : 0;
+  }
+
+  const checkActive = () => activePlayer;
 
   const changeName = () => {
     playerOne.textContent = one.nameU;
     playerTwo.textContent = two.nameU;
   };
 
-  return { one, two, changeName };
+  return {
+    one,
+    two,
+    bothPlayers,
+    scores,
+    currentScore,
+    playing,
+    changePlayer,
+    checkActive,
+    changeName,
+  };
 })(tom, comp);
+game.changePlayer();
 
-game.changeName();
-console.log(game.one);
+cells.forEach((cell) => {
+  cell.addEventListener('click', function (e) {
+    if (game.playing) {
+      e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
+      console.log(+e.target.dataset.cell);
+    }
+  });
+});
