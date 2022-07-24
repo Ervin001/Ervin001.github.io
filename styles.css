@@ -15,15 +15,19 @@ body {
   line-height: 1;
   font-weight: 400;
   color: #555;
+  background-color: #335c67;
+  height: 100vh;
 }
 
 .container {
   display: flex;
+  font-family: 'Secular One', sans-serif;
 
   /* 1140px */
   max-width: 120rem;
   padding: 0 3.2rem;
   margin: 0 auto;
+  gap: 2rem;
 
   flex-direction: column;
   align-items: center;
@@ -32,12 +36,14 @@ body {
 .title {
   margin-top: 2rem;
   font-size: 8rem;
+  color: #fff3b0;
 }
 
 .players {
   display: flex;
   font-size: 3rem;
   gap: 3rem;
+  color: #fff3b0;
 }
 
 .player {
@@ -46,4 +52,51 @@ body {
 
 .game {
   display: grid;
+  gap: 0.01rem;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+.cell {
+  font-size: 4rem;
+  padding: 6rem;
+  background-color: #9e2a2b;
+  color: #fff7c8;
+}
+
+.btns {
+  display: flex;
+  gap: 4rem;
+  align-self: center;
+}
+
+/* .btn {
+  background-color: #fff8d0;
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+  font-size: 3rem;
+} */
+
+/* From uiverse.io by @NorthFishHasNa */
+.btn {
+  display: inline-block;
+  border-radius: 4px;
+  background-color: #fff8d0;
+  border: none;
+  color: #335c67;
+  text-align: center;
+  font-size: 17px;
+  padding: 16px;
+  width: 130px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.btn {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
