@@ -50,7 +50,6 @@ const game = ((one, two) => {
       if (a === b && b === c) {
         console.log(`${game.bothPlayers[game.checkActive()].nameU} Wins!!`);
         return true;
-        break;
       }
     }
   };
@@ -85,6 +84,8 @@ const game = ((one, two) => {
   };
 })(tom, comp);
 
+game.changeName();
+
 cells.forEach((cell) => {
   cell.addEventListener('click', function (e) {
     if (game.playing) {
@@ -107,7 +108,7 @@ cells.forEach((cell) => {
         }
 
         let draw = !game.gameBoard.includes('');
-        if (draw) {
+        if (draw && game.playing) {
           console.log('Its a tie');
           game.playing = false;
         }
