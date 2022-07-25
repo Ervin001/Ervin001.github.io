@@ -20,15 +20,48 @@ let scores, currentScore, activePlayer, playing;
 // Game Factory
 const game = ((one, two) => {
   let bothPlayers = [one, two];
-  let gameBoard = [, , , , , , , ,];
+  let gameBoard = ['', '', '', '', '', '', '', '', ''];
   scores = [0, 0];
   currentScore = 0;
   playing = true;
   activePlayer = 0;
+  const winningConditions = [
+    [0, 1, 2],
+    [0, 3, 6],
+    [0, 4, 8],
+    [3, 4, 5],
+    [6, 7, 8],
+    [1, 4, 7],
+    [2, 5, 8],
+    [2, 4, 6],
+  ];
 
-  function changePlayer() {
+  const checkWinner = (array, activeMarker) => {
+    for (let i = 0; i <= 7; i++) {
+      const winCondition = winningConditions[i];
+      let a = array[winCondition[0]];
+      let b = array[winCondition[1]];
+      let c = array[winCondition[2]];
+
+      if (a === '' || b === '' || c === '') {
+        continue;
+      }
+
+      if (a === b && b === c) {
+        console.log(`${game.bothPlayers[game.checkActive()].nameU} Wins!!`);
+        return true;
+        break;
+      }
+    }
+  };
+
+  // const compare = (ar1, ar2) => {
+  //   ar1.forEach((e1, i) => ar2)
+  // };
+
+  const changePlayer = () => {
     activePlayer = activePlayer === 0 ? 1 : 0;
-  }
+  };
 
   const checkActive = () => activePlayer;
 
@@ -41,21 +74,49 @@ const game = ((one, two) => {
     one,
     two,
     bothPlayers,
+    gameBoard,
     scores,
     currentScore,
     playing,
     changePlayer,
     checkActive,
     changeName,
+    checkWinner,
   };
 })(tom, comp);
-game.changePlayer();
 
 cells.forEach((cell) => {
   cell.addEventListener('click', function (e) {
     if (game.playing) {
-      e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
-      console.log(+e.target.dataset.cell);
+      if (!e.target.innerText) {
+        e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
+        game.gameBoard[+e.target.dataset.cell] =
+          game.bothPlayers[game.checkActive()];
+
+        // game.checkWinner(
+        //   game.gameBoard,
+        //   game.bothPlayers[game.checkActive()].markerU
+
+        if (
+          game.checkWinner(
+            game.gameBoard,
+            game.bothPlayers[game.checkActive()].markerU
+          ) === true
+        ) {
+          game.playing = false;
+        }
+
+        let draw = !game.gameBoard.includes('');
+        if (draw) {
+          console.log('Its a tie');
+          game.playing = false;
+        }
+        // game.playing = false;
+        // console.log(game.playing);
+
+        // console.log(game.gameBoard);
+        game.changePlayer();
+      }
     }
   });
 });
