@@ -3,6 +3,9 @@
 const playerOne = document.querySelector('.player-one');
 const playerTwo = document.querySelector('.player-two');
 const cells = document.querySelectorAll('[data-cell]');
+const gameAfterEl = document.querySelector('::before');
+
+console.log(gameAfterEl);
 
 function Player(name, marker) {
   let nameU = name.toUpperCase();
