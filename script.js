@@ -3,9 +3,11 @@
 const playerOne = document.querySelector('.player-one');
 const playerTwo = document.querySelector('.player-two');
 const cells = document.querySelectorAll('[data-cell]');
-const gameAfterEl = document.querySelector('::before');
-
-console.log(gameAfterEl);
+const gameBlurEl = document.querySelector('.game-blur');
+const gameMSGContainer = document.querySelector('.game-message');
+const playerWonMSG = document.querySelector('.player-won');
+const gameOverMSG = document.querySelector('.game-over');
+const btnEl = document.querySelector('.reset');
 
 function Player(name, marker) {
   let nameU = name.toUpperCase();
@@ -39,6 +41,23 @@ const game = ((one, two) => {
     [2, 4, 6],
   ];
 
+  const reset = () => {
+    gameBlurEl.classList.add('hide');
+    gameMSGContainer.classList.add('hide');
+
+    // reset gameArr
+    game.gameBoard = [, , , , , , , ,];
+
+    // allow game to play
+    game.playing = true;
+
+    // clear cells
+    cells.forEach((cell) => (cell.innerHTML = ''));
+
+    // set cur player to player 1
+    game.bothPlayers[game.checkActive()].markerU = game.bothPlayers[0].markerU;
+  };
+
   const checkWinner = (array, activeMarker) => {
     for (let i = 0; i <= 7; i++) {
       const winCondition = winningConditions[i];
@@ -50,16 +69,16 @@ const game = ((one, two) => {
         continue;
       }
 
-      if (a === b && b === c) {
-        console.log(`${game.bothPlayers[game.checkActive()].nameU} Wins!!`);
+      if (a === b && b === c && a !== '' && b !== '' && c !== '') {
+        gameBlurEl.classList.toggle('hide');
+        gameMSGContainer.classList.toggle('hide');
+        playerWonMSG.textContent = `${
+          game.bothPlayers[game.checkActive()].nameU
+        } Wins!!`;
         return true;
       }
     }
   };
-
-  // const compare = (ar1, ar2) => {
-  //   ar1.forEach((e1, i) => ar2)
-  // };
 
   const changePlayer = () => {
     activePlayer = activePlayer === 0 ? 1 : 0;
@@ -92,15 +111,13 @@ game.changeName();
 cells.forEach((cell) => {
   cell.addEventListener('click', function (e) {
     if (game.playing) {
+      // checks if selected cell is empty
       if (!e.target.innerText) {
         e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
         game.gameBoard[+e.target.dataset.cell] =
           game.bothPlayers[game.checkActive()];
 
-        // game.checkWinner(
-        //   game.gameBoard,
-        //   game.bothPlayers[game.checkActive()].markerU
-
+        // checks winner
         if (
           game.checkWinner(
             game.gameBoard,
@@ -112,15 +129,32 @@ cells.forEach((cell) => {
 
         let draw = !game.gameBoard.includes('');
         if (draw && game.playing) {
-          console.log('Its a tie');
+          playerWonMSG.textContent = `It's a tie`;
+          gameBlurEl.classList.toggle('hide');
+          gameMSGContainer.classList.toggle('hide');
           game.playing = false;
         }
-        // game.playing = false;
-        // console.log(game.playing);
-
-        // console.log(game.gameBoard);
         game.changePlayer();
       }
     }
   });
+});
+
+// Reset Buttons
+btnEl.addEventListener('click', (e) => {
+  // Remove game won info
+  gameBlurEl.classList.add('hide');
+  gameMSGContainer.classList.add('hide');
+
+  // reset gameArr
+  game.gameBoard = [, , , , , , , ,];
+
+  // allow game to play
+  game.playing = true;
+
+  // clear cells
+  cells.forEach((cell) => (cell.innerHTML = ''));
+
+  // set cur player to player 1
+  game.bothPlayers[game.checkActive()].markerU = game.bothPlayers[0].markerU;
 });
