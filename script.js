@@ -98,16 +98,16 @@ game.changeNameColor();
 cellsEL.forEach((cell) => {
   cell.addEventListener('click', (e) => {
     if (game.playing && !e.target.innerText) {
-      // adds marker to gameboard
+      // adds marker to gameBoard
       game.gameBoard[+e.target.dataset.cell] =
         game.players[game.active()].markerUpper;
       // adds marker to UI
       e.target.innerText = `${game.players[game.active()].markerUpper}`;
 
       game.checkWinner(game.gameBoard);
-      game.changeNameColor();
-      game.switchPlayer();
       game.removeNameColor();
+      game.switchPlayer();
+      game.changeNameColor();
     }
   });
 });
