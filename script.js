@@ -1,6 +1,7 @@
 'use strict';
 
 const gameEl = document.querySelector('.game');
+const playersEl = document.querySelectorAll('player');
 const playerOneEl = document.querySelector('.player-one');
 const playerTwoEl = document.querySelector('.player-two');
 const gameMessageEl = document.querySelector('.game-message');
@@ -24,17 +25,23 @@ const game = ((playerOne, playerTwo) => {
   let gameBoard = [, , , , , , , ,];
   let playing = true;
   let players = [playerOne, playerTwo];
-  let activePlayer = 0;
   let score = [0, 0];
+  let activeP = 0;
 
   const checkWinner = () => {};
 
   const active = () => {
-    return activePlayer;
+    return activeP;
+  };
+
+  const changeNameColor = () => {
+    game.active() === 0
+      ? (playerOneEl.style.color = 'red')
+      : (playerTwoEl.style.color = 'red');
   };
 
   const switchPlayer = () => {
-    activePlayer = activePlayer === 0 ? 1 : 0;
+    activeP = activeP === 0 ? 1 : 0;
   };
   return {
     playerOne,
@@ -43,17 +50,21 @@ const game = ((playerOne, playerTwo) => {
     playing,
     players,
     active,
+    changeNameColor,
     switchPlayer,
   };
 })(tom, comp);
 
+// game.changeNameColor();
 if (game.playing) {
   cellsEL.forEach((cell) => {
     cell.addEventListener('click', (e) => {
-      // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
+      game.gameBoard[+e.target.dataset.cell] =
+        game.players[game.active()].markerUpper;
 
-      console.log(+e.target.dataset.cell);
-      console.log(game.gameBoard[+e.target.dataset.cell]);
+      game.changeNameColor();
+      // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
+      console.log(game.gameBoard);
     });
   });
 }
