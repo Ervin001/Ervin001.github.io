@@ -49,7 +49,7 @@ const game = ((playerOne, playerTwo) => {
       }
 
       if (a === b && b === c) {
-        // gameBlurEl.classList.toggle('hide');
+        gameBlurEl.classList.toggle('hide');
         gameMessageEl.classList.toggle('hide');
         playerWonEl.textContent = `${
           game.players[game.active()].nameUpper
@@ -108,6 +108,15 @@ cellsEL.forEach((cell) => {
       game.removeNameColor();
       game.switchPlayer();
       game.changeNameColor();
+
+      let draw = game.gameBoard.includes('');
+      console.log(draw);
+      if (draw && game.playing) {
+        playerWonEl.textContent = `It's a tie`;
+        gameBlurEl.classList.toggle('hide');
+        gameMessageEl.classList.toggle('hide');
+        game.playing = false;
+      }
     }
   });
 });
