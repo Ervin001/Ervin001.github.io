@@ -4,6 +4,7 @@ const gameEl = document.querySelector('.game');
 const playersEl = document.querySelectorAll('player');
 const playerOneEl = document.querySelector('.player-one');
 const playerTwoEl = document.querySelector('.player-two');
+const gameBlurEl = document.querySelector('.game-blur');
 const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
 const btnReset = document.querySelector('.reset');
@@ -39,28 +40,22 @@ const game = ((playerOne, playerTwo) => {
 
   const checkWinner = (array) => {
     for (let i = 0; i < winningConditions.length; i++) {
-      let winCondition = winningConditions[i];
-      let a = winCondition[0];
-      let b = winCondition[1];
-      let c = winCondition[2];
-
-      console.log(a === '');
-
-      if (a === '' || b === '' || c === '') {
+      const winCondition = winningConditions[i];
+      let a = array[winCondition[0]];
+      let b = array[winCondition[1]];
+      let c = array[winCondition[2]];
+      if (a === undefined || b === undefined || c === undefined) {
         continue;
       }
 
-      // if (a === b && b === c) {
-      //   gameBlurEl.classList.toggle('hide');
-      //   gameMSGContainer.classList.toggle('hide');
-      //   playerWonMSG.textContent = `${
-      //     game.bothPlayers[game.checkActive()].nameU
-      //   } Wins!!`;
-      //   return true;
-      // }
-
       if (a === b && b === c) {
-        return true;
+        // gameBlurEl.classList.toggle('hide');
+        gameMessageEl.classList.toggle('hide');
+        playerWonEl.textContent = `${
+          game.players[game.active()].nameUpper
+        } Wins!!`;
+        game.playing = false;
+        break;
       }
     }
   };
@@ -98,27 +93,25 @@ const game = ((playerOne, playerTwo) => {
   };
 })(tom, comp);
 
-game.gameBoard = ['X', 'X', 'X', , , , ,];
-console.log(game.checkWinner(game.gameBoard));
+game.changeNameColor();
+if (game.playing) {
+  cellsEL.forEach((cell) => {
+    cell.addEventListener('click', (e) => {
+      // adds marker to gameboard
+      game.gameBoard[+e.target.dataset.cell] =
+        game.players[game.active()].markerUpper;
+      // adds marker to UI
+      e.target.innerText = `${game.players[game.active()].markerUpper}`;
 
-// game.changeNameColor();
-// if (game.playing) {
-//   cellsEL.forEach((cell) => {
-//     cell.addEventListener('click', (e) => {
-//       // adds marker to gameboard
-//       game.gameBoard[+e.target.dataset.cell] =
-//         game.players[game.active()].markerUpper;
-//       // adds marker to UI
-//       e.target.innerText = `${game.players[game.active()].markerUpper}`;
-//       game.changeNameColor();
-//       game.checkWinner();
-//       game.switchPlayer();
-//       game.removeNameColor();
+      game.checkWinner(game.gameBoard);
+      game.changeNameColor();
+      game.switchPlayer();
+      game.removeNameColor();
+      console.log(game.playing);
 
-//       // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
-//       console.log(game.gameBoard);
-//     });
-//   });
-// }
+      // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
+    });
+  });
+}
 
 // console.log(game.players[game.active()]);
