@@ -111,6 +111,7 @@ cellsEL.forEach((cell) => {
 
       let draw = game.gameBoard.includes('');
       console.log(draw);
+
       if (draw && game.playing) {
         playerWonEl.textContent = `It's a tie`;
         gameBlurEl.classList.toggle('hide');
