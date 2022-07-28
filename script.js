@@ -37,7 +37,7 @@ const game = ((playerOne, playerTwo) => {
   let score = [0, 0];
   let activeP = 0;
 
-  const checkWinner = () => {
+  const checkWinner = (array) => {
     for (let i = 0; i < winningConditions.length; i++) {
       let winCondition = winningConditions[i];
       let a = winCondition[0];
@@ -99,7 +99,7 @@ const game = ((playerOne, playerTwo) => {
 })(tom, comp);
 
 game.gameBoard = ['X', 'X', 'X', , , , ,];
-console.log(game.checkWinner());
+console.log(game.checkWinner(game.gameBoard));
 
 // game.changeNameColor();
 // if (game.playing) {
