@@ -21,14 +21,39 @@ const tom = Player('tom', 'x');
 const comp = Player('computer', 'o');
 
 const game = ((playerOne, playerTwo) => {
-  let winningConditions = [[0, 1, 2]];
+  let winningConditions = [
+    [0, 1, 2],
+    [0, 3, 6],
+    [0, 4, 8],
+    [3, 4, 5],
+    [6, 7, 8],
+    [1, 4, 7],
+    [2, 5, 8],
+    [2, 4, 6],
+  ];
   let gameBoard = [, , , , , , , ,];
   let playing = true;
   let players = [playerOne, playerTwo];
   let score = [0, 0];
   let activeP = 0;
 
-  const checkWinner = () => {};
+  const checkWinner = () => {
+    for (let i = 0; i <= winningConditions.length; i++) {
+      let winCondition = winningConditions[i];
+      let a = winCondition[0];
+      let b = winCondition[1];
+      let c = winCondition[2];
+
+      if (a === '' || b === '' || c === '') {
+        continue;
+      }
+
+      if (a === b && b === c) {
+        game.players[game.active()];
+        break;
+      }
+    }
+  };
 
   const active = () => {
     return activeP;
@@ -40,6 +65,12 @@ const game = ((playerOne, playerTwo) => {
       : (playerTwoEl.style.color = 'red');
   };
 
+  const removeNameColor = () => {
+    game.active() === 0
+      ? (playerOneEl.style.color = '')
+      : (playerTwoEl.style.color = '');
+  };
+
   const switchPlayer = () => {
     activeP = activeP === 0 ? 1 : 0;
   };
@@ -49,8 +80,10 @@ const game = ((playerOne, playerTwo) => {
     gameBoard,
     playing,
     players,
+    checkWinner,
     active,
     changeNameColor,
+    removeNameColor,
     switchPlayer,
   };
 })(tom, comp);
@@ -59,10 +92,16 @@ const game = ((playerOne, playerTwo) => {
 if (game.playing) {
   cellsEL.forEach((cell) => {
     cell.addEventListener('click', (e) => {
+      // adds marker to gameboard
       game.gameBoard[+e.target.dataset.cell] =
         game.players[game.active()].markerUpper;
-
+      // adds marker to UI
+      e.target.innerText = `${game.players[game.active()].markerUpper}`;
       game.changeNameColor();
+      game.checkWinner();
+      game.switchPlayer();
+      game.removeNameColor();
+
       // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
       console.log(game.gameBoard);
     });
