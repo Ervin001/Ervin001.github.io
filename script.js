@@ -7,6 +7,7 @@ const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
 const btnReset = document.querySelector('.reset');
 const btnStartOver = document.querySelector('.start-over');
+const cellsEL = document.querySelectorAll('[data-cell]');
 
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
@@ -45,3 +46,12 @@ const game = ((playerOne, playerTwo) => {
     switchPlayer,
   };
 })(tom, comp);
+
+if (game.playing) {
+  cellsEL.forEach((cell) => {
+    cell.addEventListener('click', (e) => {
+      game.gameBoard[+e.target.dataset.cell] = game.gameBoard;
+      console.log(game.gameBoard);
+    });
+  });
+}
