@@ -50,8 +50,12 @@ const game = ((playerOne, playerTwo) => {
 if (game.playing) {
   cellsEL.forEach((cell) => {
     cell.addEventListener('click', (e) => {
-      game.gameBoard[+e.target.dataset.cell] = game.gameBoard;
-      console.log(game.gameBoard);
+      // game.gameBoard[+e.target.dataset.cell] = game.bothPlayers[game.active()].markerUpper;
+
+      console.log(+e.target.dataset.cell);
+      console.log(game.gameBoard[+e.target.dataset.cell]);
     });
   });
 }
+
+// console.log(game.players[game.active()]);
