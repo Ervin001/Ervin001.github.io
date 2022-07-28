@@ -54,10 +54,20 @@ const game = ((playerOne, playerTwo) => {
         playerWonEl.textContent = `${
           game.players[game.active()].nameUpper
         } Wins!!`;
-        game.playing = false;
-        break;
+        // game.playing = false;
+        true;
       }
     }
+  };
+
+  const reset = () => {
+    // clear gameBoard
+    game.gameBoard = [, , , , , , , ,];
+
+    // clear cells
+    cellsEL.forEach((cell) => {
+      cell.textContent = '';
+    });
   };
 
   const active = () => {
@@ -97,29 +107,63 @@ game.changeNameColor();
 
 cellsEL.forEach((cell) => {
   cell.addEventListener('click', (e) => {
-    if (game.playing && !e.target.innerText) {
-      // adds marker to gameBoard
-      game.gameBoard[+e.target.dataset.cell] =
-        game.players[game.active()].markerUpper;
-      // adds marker to UI
-      e.target.innerText = `${game.players[game.active()].markerUpper}`;
+    if (game.playing) {
+      if (game.playing && !e.target.innerText) {
+        // adds marker to gameBoard
+        game.gameBoard[+e.target.dataset.cell] =
+          game.players[game.active()].markerUpper;
+        // adds marker to UI
+        e.target.innerText = `${game.players[game.active()].markerUpper}`;
 
-      game.checkWinner(game.gameBoard);
-      game.removeNameColor();
-      game.switchPlayer();
-      game.changeNameColor();
+        if (game.checkWinner(game.gameBoard)) {
+          game.playing = false;
+          cellsEL.forEach((cell) => console.log(cell.textContent));
+        }
 
-      let draw = game.gameBoard.includes('');
-      console.log(draw);
+        let draw = !game.gameBoard.includes(undefined);
+        console.log(draw);
+        if (draw && game.playing) {
+          playerWonEl.textContent = `It's a tie`;
+          gameBlurEl.classList.toggle('hide');
+          gameMessageEl.classList.toggle('hide');
+          game.playing = false;
+        }
 
-      if (draw && game.playing) {
-        playerWonEl.textContent = `It's a tie`;
-        gameBlurEl.classList.toggle('hide');
-        gameMessageEl.classList.toggle('hide');
-        game.playing = false;
+        // game.checkWinner(game.gameBoard);
+        game.removeNameColor();
+        game.switchPlayer();
+        game.changeNameColor();
       }
     }
   });
 });
 
 // console.log(game.players[game.active()]);
+// if (game.playing) {
+//   // checks if selected cell is empty
+//   if (!e.target.innerText) {
+//     e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
+//     game.gameBoard[+e.target.dataset.cell] =
+//       game.bothPlayers[game.checkActive()];
+
+//     // checks winner
+//     if (
+//       game.checkWinner(
+//         game.gameBoard,
+//         game.bothPlayers[game.checkActive()].markerU
+//       ) === true
+//     ) {
+//       game.playing = false;
+//     }
+
+//     let draw = !game.gameBoard.includes('');
+//     if (draw && game.playing) {
+//       playerWonMSG.textContent = `It's a tie`;
+//       gameBlurEl.classList.toggle('hide');
+//       gameMSGContainer.classList.toggle('hide');
+//       game.playing = false;
+//     }
+//     game.changePlayer();
+//   }
+// }
+// });
