@@ -10,6 +10,8 @@ const playerWonEl = document.querySelector('.player-won');
 const btnResetEl = document.querySelector('.reset');
 const btnStartOverEl = document.querySelector('.start-over');
 const cellsEL = document.querySelectorAll('[data-cell]');
+const playerOneScoreEl = document.querySelector('.player-one-score');
+const playerTwoScoreEl = document.querySelector('.player-two-score');
 
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
@@ -163,4 +165,10 @@ btnResetEl.addEventListener('click', (e) => {
   game.reset();
 });
 
+// test: decrease points
 console.log(game.pointsDecrease(game.players[game.active()]));
+
+playerOneScoreEl.textContent = game.players[game.active()].playerScoreFunc();
+
+// text: add points
+console.log(game.pointsIncrease(game.players[game.active()]));
