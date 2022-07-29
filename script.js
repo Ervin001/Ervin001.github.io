@@ -7,15 +7,22 @@ const playerTwoEl = document.querySelector('.player-two');
 const gameBlurEl = document.querySelector('.game-blur');
 const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
-const btnReset = document.querySelector('.reset');
-const btnStartOver = document.querySelector('.start-over');
+const btnResetEl = document.querySelector('.reset');
+const btnStartOverEl = document.querySelector('.start-over');
 const cellsEL = document.querySelectorAll('[data-cell]');
 
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
   const markerUpper = marker.toUpperCase();
+  let scores = 0;
 
-  return { nameUpper, markerUpper };
+  const playerScoreFunc = () => scores;
+
+  const addTen = () => (scores += 10);
+
+  const removeTen = () => (scores -= 10);
+
+  return { nameUpper, markerUpper, playerScoreFunc, addTen, removeTen };
 }
 
 const tom = Player('tom', 'x');
@@ -37,6 +44,9 @@ const game = ((playerOne, playerTwo) => {
   let players = [playerOne, playerTwo];
   let score = [0, 0];
   let activeP = 0;
+
+  const pointsIncrease = (activePlayer) => activePlayer.addTen();
+  const pointsDecrease = (activePlayer) => activePlayer.removeTen();
 
   const checkWinner = (array) => {
     for (let i = 0; i < winningConditions.length; i++) {
@@ -65,13 +75,20 @@ const game = ((playerOne, playerTwo) => {
     game.gameBoard = [, , , , , , , ,];
 
     // clear cells
-    cellsEL.forEach((cell) => {
-      cell.textContent = '';
-    });
+    cellsEL.forEach((cell) => (cell.innerHTML = ''));
+
+    // set active player to 1
+    active('s');
+
+    // remove win message and who won
+    gameBlurEl.classList.add('hide');
+    gameMessageEl.classList.add('hide');
   };
 
-  const active = () => {
-    return activeP;
+  const active = (reset) => {
+    if (!reset) return activeP;
+
+    if (reset) return activeP == 0;
   };
 
   const changeNameColor = () => {
@@ -89,6 +106,7 @@ const game = ((playerOne, playerTwo) => {
   const switchPlayer = () => {
     activeP = activeP === 0 ? 1 : 0;
   };
+
   return {
     playerOne,
     playerTwo,
@@ -97,9 +115,12 @@ const game = ((playerOne, playerTwo) => {
     players,
     checkWinner,
     active,
+    reset,
     changeNameColor,
     removeNameColor,
     switchPlayer,
+    pointsIncrease,
+    pointsDecrease,
   };
 })(tom, comp);
 
@@ -117,7 +138,6 @@ cellsEL.forEach((cell) => {
 
         if (game.checkWinner(game.gameBoard)) {
           game.playing = false;
-          cellsEL.forEach((cell) => console.log(cell.textContent));
         }
 
         let draw = !game.gameBoard.includes(undefined);
@@ -138,32 +158,9 @@ cellsEL.forEach((cell) => {
   });
 });
 
-// console.log(game.players[game.active()]);
-// if (game.playing) {
-//   // checks if selected cell is empty
-//   if (!e.target.innerText) {
-//     e.target.innerText = `${game.bothPlayers[game.checkActive()].markerU}`;
-//     game.gameBoard[+e.target.dataset.cell] =
-//       game.bothPlayers[game.checkActive()];
+btnResetEl.addEventListener('click', (e) => {
+  console.log(e);
+  game.reset();
+});
 
-//     // checks winner
-//     if (
-//       game.checkWinner(
-//         game.gameBoard,
-//         game.bothPlayers[game.checkActive()].markerU
-//       ) === true
-//     ) {
-//       game.playing = false;
-//     }
-
-//     let draw = !game.gameBoard.includes('');
-//     if (draw && game.playing) {
-//       playerWonMSG.textContent = `It's a tie`;
-//       gameBlurEl.classList.toggle('hide');
-//       gameMSGContainer.classList.toggle('hide');
-//       game.playing = false;
-//     }
-//     game.changePlayer();
-//   }
-// }
-// });
+console.log(game.pointsDecrease(game.players[game.active()]));
