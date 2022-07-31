@@ -2,8 +2,8 @@
 
 const gameEl = document.querySelector('.game');
 const playersEl = document.querySelectorAll('player');
-const playerOneEl = document.querySelector('.player-one');
-const playerTwoEl = document.querySelector('.player-two');
+const playerOneEl = document.querySelector('.player-one-name');
+const playerTwoEl = document.querySelector('.player-two-name');
 const gameBlurEl = document.querySelector('.game-blur');
 const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
@@ -12,6 +12,7 @@ const btnStartOverEl = document.querySelector('.start-over');
 const cellsEL = document.querySelectorAll('[data-cell]');
 const playerOneScoreEl = document.querySelector('.player-one-score');
 const playerTwoScoreEl = document.querySelector('.player-two-score');
+const scoresPlayersEl = document.querySelectorAll('.score');
 
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
@@ -47,8 +48,13 @@ const game = ((playerOne, playerTwo) => {
   let score = [0, 0];
   let activeP = 0;
 
-  const pointsIncrease = (activePlayer) => activePlayer.addTen();
-  const pointsDecrease = (activePlayer) => activePlayer.removeTen();
+  const pointsIncrease = (activePlayer) => {
+    return activePlayer;
+  };
+  const pointsDecrease = (activePlayer) => {
+    game.switchPlayer();
+    return activePlayer;
+  };
 
   const checkWinner = (array) => {
     for (let i = 0; i < winningConditions.length; i++) {
@@ -66,7 +72,20 @@ const game = ((playerOne, playerTwo) => {
         playerWonEl.textContent = `${
           game.players[game.active()].nameUpper
         } Wins!!`;
-        // game.playing = false;
+        console.log(game.pointsIncrease(game.players[game.active()].addTen()));
+        game.switchPlayer();
+        console.log(
+          game.pointsDecrease(game.players[game.active()].removeTen())
+        );
+
+        // add score to UI
+        scoresPlayersEl[game.active()].textContent =
+          +scoresPlayersEl[game.active()].textContent + 1;
+
+        // add score to game obj
+        // game.pointsIncrease(game.scores[game.active()]);
+
+        // game.players[game.active].score
         true;
       }
     }
@@ -80,7 +99,12 @@ const game = ((playerOne, playerTwo) => {
     cellsEL.forEach((cell) => (cell.innerHTML = ''));
 
     // set active player to 1
-    active('s');
+
+    // change the active player color back to player 1
+    game.removeNameColor();
+    game.active('s');
+    game.changeNameColor();
+    // remove the color of the previous player
 
     // remove win message and who won
     gameBlurEl.classList.add('hide');
@@ -90,7 +114,7 @@ const game = ((playerOne, playerTwo) => {
   const active = (reset) => {
     if (!reset) return activeP;
 
-    if (reset) return activeP == 0;
+    if (reset) return (activeP = 0);
   };
 
   const changeNameColor = () => {
@@ -127,6 +151,8 @@ const game = ((playerOne, playerTwo) => {
 })(tom, comp);
 
 game.changeNameColor();
+playerOneEl.textContent = game.playerOne.nameUpper;
+playerTwoEl.textContent = game.playerTwo.nameUpper;
 
 cellsEL.forEach((cell) => {
   cell.addEventListener('click', (e) => {
@@ -143,7 +169,7 @@ cellsEL.forEach((cell) => {
         }
 
         let draw = !game.gameBoard.includes(undefined);
-        console.log(draw);
+
         if (draw && game.playing) {
           playerWonEl.textContent = `It's a tie`;
           gameBlurEl.classList.toggle('hide');
@@ -161,14 +187,5 @@ cellsEL.forEach((cell) => {
 });
 
 btnResetEl.addEventListener('click', (e) => {
-  console.log(e);
   game.reset();
 });
-
-// test: decrease points
-console.log(game.pointsDecrease(game.players[game.active()]));
-
-playerOneScoreEl.textContent = game.players[game.active()].playerScoreFunc();
-
-// text: add points
-console.log(game.pointsIncrease(game.players[game.active()]));
