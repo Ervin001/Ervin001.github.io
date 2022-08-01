@@ -104,11 +104,14 @@ const game = ((playerOne, playerTwo) => {
     game.removeNameColor();
     game.active('s');
     game.changeNameColor();
-    // remove the color of the previous player
 
+    // remove the color of the previous player
     // remove win message and who won
     gameBlurEl.classList.add('hide');
     gameMessageEl.classList.add('hide');
+
+    // set game to true
+    game.playing = true;
   };
 
   const active = (reset) => {
