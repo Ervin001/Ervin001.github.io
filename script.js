@@ -2,8 +2,8 @@
 
 const gameEl = document.querySelector('.game');
 const playersEl = document.querySelectorAll('player');
-const playerOneEl = document.querySelector('.player-one-name');
-const playerTwoEl = document.querySelector('.player-two-name');
+const playerOneNameEl = document.querySelector('.player-one-name');
+const playerTwoNameEl = document.querySelector('.player-two-name');
 const gameBlurEl = document.querySelector('.game-blur');
 const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
@@ -17,18 +17,18 @@ const scoresPlayersEl = document.querySelectorAll('.score');
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
   const markerUpper = marker.toUpperCase();
-  let scores = 0;
+  let score = 0;
 
-  const playerScoreFunc = () => scores;
+  const playerScoreFunc = () => score;
 
-  const addTen = () => (scores += 10);
+  const addTen = () => (score += 10);
 
-  const removeTen = () => (scores -= 10);
+  const removeTen = () => (score -= 10);
 
   return { nameUpper, markerUpper, playerScoreFunc, addTen, removeTen };
 }
 
-const tom = Player('tom', 'x');
+const tom = Player('rick', 'x');
 const comp = Player('computer', 'o');
 
 const game = ((playerOne, playerTwo) => {
@@ -42,7 +42,73 @@ const game = ((playerOne, playerTwo) => {
     [2, 5, 8],
     [2, 4, 6],
   ];
-  let gameBoard = [, , , , , , , ,];
+
+  let gameBoard = ['-', '-', '-', '-', '-', '-', '-', '-', '-'];
   let playing = true;
   let players = [playerOne, playerTwo];
-  
+  let activePlayer = 0;
+
+  const getActivePlayer = () => activePlayer;
+  const switchActivePlayer = () =>
+    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+  const checkWinner = () => {
+    let roundWon = true;
+    for (let i = 0; i <= 7; i++) {
+      const winCondition = winningConditions[i];
+      let a = gameBoard[winCondition[0]];
+      let b = gameBoard[winCondition[1]];
+      let c = gameBoard[winCondition[2]];
+
+      if (a === '' || b === '' || c === '') {
+        continue;
+      }
+
+      if (a === b && b === c) {
+        roundWon = true;
+        return;
+      }
+    }
+  };
+
+  const getEmptySpaces = () => {
+    return gameBoard.filter((square, i) =>
+      square === '-' ? console.log(square, i) : false
+    );
+  };
+
+  return {
+    playerOne,
+    playerTwo,
+    players,
+    playing,
+    getActivePlayer,
+    switchActivePlayer,
+    checkWinner,
+    getEmptySpaces,
+    gameBoard,
+  };
+})(tom, comp);
+
+playerOneNameEl.textContent = game.playerOne.nameUpper;
+playerTwoNameEl.textContent = game.playerTwo.nameUpper;
+
+// Check draw
+// let roundDraw = !gameBoard.includes(undefined)
+
+cellsEL.forEach((cell) =>
+  cell.addEventListener('click', (e) => {
+    if (game.playing) {
+      if (e.target.textContent === '') {
+        // Show marker on UI
+        e.target.textContent = game.players[game.getActivePlayer()].markerUpper;
+
+        // Add markers to GameBoard State
+        game.gameBoard[e.target.dataset.cell] =
+          game.players[game.getActivePlayer()].markerUpper;
+
+        // Switch player
+        game.switchActivePlayer();
+      }
+    }
+  })
+);
