@@ -1,7 +1,7 @@
 'use strict';
 
 const gameEl = document.querySelector('.game');
-const playersEl = document.querySelectorAll('player');
+const playersEl = document.querySelectorAll('.player');
 const playerOneNameEl = document.querySelector('.player-one-name');
 const playerTwoNameEl = document.querySelector('.player-two-name');
 const gameBlurEl = document.querySelector('.game-blur');
@@ -31,7 +31,7 @@ function Player(name, marker) {
 const tom = Player('rick', 'x');
 const comp = Player('computer', 'o');
 
-const game = ((playerOne, playerTwo) => {
+const game = ((playerOne, playerTwo, gameType) => {
   let winningConditions = [
     [0, 1, 2],
     [0, 3, 6],
@@ -49,8 +49,10 @@ const game = ((playerOne, playerTwo) => {
   let activePlayer = 0;
 
   const getActivePlayer = () => activePlayer;
+
   const switchActivePlayer = () =>
     activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+
   const checkWinner = () => {
     let roundWon = true;
     for (let i = 0; i <= 7; i++) {
@@ -65,29 +67,48 @@ const game = ((playerOne, playerTwo) => {
 
       if (a === b && b === c) {
         roundWon = true;
+
+        gameBlurEl.style.display = '';
+
         return;
       }
     }
   };
 
   const getEmptySpaces = () => {
-    return gameBoard.filter((square, i) =>
-      square === '-' ? console.log(square, i) : false
-    );
+    let newIndexes = [];
+    const markedBoard = gameBoard.forEach((cell, i) => {
+      if (cell === '-') newIndexes.push(i);
+    });
+
+    const indexedNum = Math.trunc(Math.random() * newIndexes.length);
+
+    const newNum = newIndexes[indexedNum];
+    console.log(newNum);
+    if (newNum !== undefined) {
+      cellsEL[newNum].textContent = players[getActivePlayer()].markerUpper;
+      gameBoard[newNum] += 'O';
+    }
+  };
+
+  const addRandomMarker = () => {
+    // console.log(getEmptySpaces().length);
   };
 
   return {
     playerOne,
     playerTwo,
+    gameType,
     players,
     playing,
     getActivePlayer,
     switchActivePlayer,
     checkWinner,
     getEmptySpaces,
+    addRandomMarker,
     gameBoard,
   };
-})(tom, comp);
+})(tom, comp, 'easy');
 
 playerOneNameEl.textContent = game.playerOne.nameUpper;
 playerTwoNameEl.textContent = game.playerTwo.nameUpper;
@@ -95,19 +116,30 @@ playerTwoNameEl.textContent = game.playerTwo.nameUpper;
 // Check draw
 // let roundDraw = !gameBoard.includes(undefined)
 
+playersEl[game.getActivePlayer()].style.color = 'red';
 cellsEL.forEach((cell) =>
   cell.addEventListener('click', (e) => {
     if (game.playing) {
-      if (e.target.textContent === '') {
-        // Show marker on UI
-        e.target.textContent = game.players[game.getActivePlayer()].markerUpper;
+      if (game.gameType === 'easy') {
+        if (e.target.textContent === '') {
+          // Show marker on UI
+          e.target.textContent =
+            game.players[game.getActivePlayer()].markerUpper;
+          // Remove previous player color
+          playersEl[game.getActivePlayer()].style.color = '';
+          // Add markers to GameBoard State
+          game.gameBoard[e.target.dataset.cell] =
+            game.players[game.getActivePlayer()].markerUpper;
+          game.checkWinner();
+          // Switch player
+          game.switchActivePlayer();
+          game.getEmptySpaces();
+          game.switchActivePlayer();
+          console.log(game.gameBoard);
 
-        // Add markers to GameBoard State
-        game.gameBoard[e.target.dataset.cell] =
-          game.players[game.getActivePlayer()].markerUpper;
-
-        // Switch player
-        game.switchActivePlayer();
+          // Change active player color
+          playersEl[game.getActivePlayer()].style.color = 'red';
+        }
       }
     }
   })
