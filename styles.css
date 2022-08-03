@@ -34,7 +34,7 @@ body {
 }
 
 .title {
-  flex-wrap: nowrap;
+  /* flex-wrap: nowrap; */
   margin-top: 2rem;
   font-size: 8rem;
   color: #fff3b0;
