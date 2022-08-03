@@ -61,16 +61,18 @@ const game = ((playerOne, playerTwo, gameType) => {
       let b = gameBoard[winCondition[1]];
       let c = gameBoard[winCondition[2]];
 
-      if (a === '' || b === '' || c === '') {
+      if (a === '-' || b === '-' || c === '-') {
         continue;
       }
 
       if (a === b && b === c) {
-        roundWon = true;
-
         gameBlurEl.style.display = '';
-
-        return;
+        gameMessageEl.style.display = '';
+        playerWonEl.textContent = `${
+          players[getActivePlayer()].nameUpper
+        } has won the game`;
+        console.log('test');
+        return true;
       }
     }
   };
@@ -84,10 +86,11 @@ const game = ((playerOne, playerTwo, gameType) => {
     const indexedNum = Math.trunc(Math.random() * newIndexes.length);
 
     const newNum = newIndexes[indexedNum];
-    console.log(newNum);
+
     if (newNum !== undefined) {
       cellsEL[newNum].textContent = players[getActivePlayer()].markerUpper;
-      gameBoard[newNum] += 'O';
+      gameBoard[newNum] = '';
+      gameBoard[newNum] = players[1].markerUpper;
     }
   };
 
@@ -130,12 +133,16 @@ cellsEL.forEach((cell) =>
           // Add markers to GameBoard State
           game.gameBoard[e.target.dataset.cell] =
             game.players[game.getActivePlayer()].markerUpper;
-          game.checkWinner();
+
+          if (game.checkWinner()) {
+            game.playing = false;
+          }
+          // game.checkWinner();
           // Switch player
           game.switchActivePlayer();
           game.getEmptySpaces();
+          game.checkWinner();
           game.switchActivePlayer();
-          console.log(game.gameBoard);
 
           // Change active player color
           playersEl[game.getActivePlayer()].style.color = 'red';
