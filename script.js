@@ -66,12 +66,11 @@ const game = ((playerOne, playerTwo, gameType) => {
       }
 
       if (a === b && b === c) {
-        gameBlurEl.style.display = '';
-        gameMessageEl.style.display = '';
+        gameBlurEl.classList.remove('hide');
+        gameMessageEl.classList.remove('hide');
         playerWonEl.textContent = `${
-          players[getActivePlayer()].nameUpper
-        } has won the game`;
-        console.log('test');
+          players[game.getActivePlayer()].nameUpper
+        } Wins!!`;
         return true;
       }
     }
@@ -137,12 +136,18 @@ cellsEL.forEach((cell) =>
           if (game.checkWinner()) {
             game.playing = false;
           }
-          // game.checkWinner();
+
           // Switch player
           game.switchActivePlayer();
-          game.getEmptySpaces();
-          game.checkWinner();
-          game.switchActivePlayer();
+          const playerTimer = setTimeout(() => {
+            // Remove previous player color
+            playersEl[game.getActivePlayer()].style.color = '';
+
+            game.getEmptySpaces();
+            game.checkWinner();
+            game.switchActivePlayer();
+            playersEl[game.getActivePlayer()].style.color = 'red';
+          }, 500);
 
           // Change active player color
           playersEl[game.getActivePlayer()].style.color = 'red';
