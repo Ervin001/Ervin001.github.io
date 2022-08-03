@@ -1,9 +1,9 @@
 'use strict';
 
 const gameEl = document.querySelector('.game');
-const playersEl = document.querySelectorAll('player');
-const playerOneEl = document.querySelector('.player-one-name');
-const playerTwoEl = document.querySelector('.player-two-name');
+const playersEl = document.querySelectorAll('.player');
+const playerOneNameEl = document.querySelector('.player-one-name');
+const playerTwoNameEl = document.querySelector('.player-two-name');
 const gameBlurEl = document.querySelector('.game-blur');
 const gameMessageEl = document.querySelector('.game-message');
 const playerWonEl = document.querySelector('.player-won');
@@ -17,21 +17,21 @@ const scoresPlayersEl = document.querySelectorAll('.score');
 function Player(name, marker) {
   const nameUpper = name.toUpperCase();
   const markerUpper = marker.toUpperCase();
-  let scores = 0;
+  let score = 0;
 
-  const playerScoreFunc = () => scores;
+  const playerScoreFunc = () => score;
 
-  const addTen = () => (scores += 10);
+  const addTen = () => (score += 10);
 
-  const removeTen = () => (scores -= 10);
+  const removeTen = () => (score -= 10);
 
   return { nameUpper, markerUpper, playerScoreFunc, addTen, removeTen };
 }
 
-const tom = Player('tom', 'x');
+const tom = Player('rick', 'x');
 const comp = Player('computer', 'o');
 
-const game = ((playerOne, playerTwo) => {
+const game = ((playerOne, playerTwo, gameType) => {
   let winningConditions = [
     [0, 1, 2],
     [0, 3, 6],
@@ -42,153 +42,117 @@ const game = ((playerOne, playerTwo) => {
     [2, 5, 8],
     [2, 4, 6],
   ];
-  let gameBoard = [, , , , , , , ,];
+
+  let gameBoard = ['-', '-', '-', '-', '-', '-', '-', '-', '-'];
   let playing = true;
   let players = [playerOne, playerTwo];
-  let score = [0, 0];
-  let activeP = 0;
+  let activePlayer = 0;
 
-  const pointsIncrease = (activePlayer) => {
-    return activePlayer;
-  };
-  const pointsDecrease = (activePlayer) => {
-    game.switchPlayer();
-    return activePlayer;
-  };
+  const getActivePlayer = () => activePlayer;
 
-  const checkWinner = (array) => {
-    for (let i = 0; i < winningConditions.length; i++) {
+  const switchActivePlayer = () =>
+    activePlayer === 0 ? (activePlayer = 1) : (activePlayer = 0);
+
+  const checkWinner = () => {
+    let roundWon = true;
+    for (let i = 0; i <= 7; i++) {
       const winCondition = winningConditions[i];
-      let a = array[winCondition[0]];
-      let b = array[winCondition[1]];
-      let c = array[winCondition[2]];
-      if (a === undefined || b === undefined || c === undefined) {
+      let a = gameBoard[winCondition[0]];
+      let b = gameBoard[winCondition[1]];
+      let c = gameBoard[winCondition[2]];
+
+      if (a === '-' || b === '-' || c === '-') {
         continue;
       }
 
       if (a === b && b === c) {
-        gameBlurEl.classList.toggle('hide');
-        gameMessageEl.classList.toggle('hide');
+        gameBlurEl.classList.remove('hide');
+        gameMessageEl.classList.remove('hide');
         playerWonEl.textContent = `${
-          game.players[game.active()].nameUpper
+          players[game.getActivePlayer()].nameUpper
         } Wins!!`;
-        console.log(game.pointsIncrease(game.players[game.active()].addTen()));
-        game.switchPlayer();
-        console.log(
-          game.pointsDecrease(game.players[game.active()].removeTen())
-        );
-
-        // add score to UI
-        scoresPlayersEl[game.active()].textContent =
-          +scoresPlayersEl[game.active()].textContent + 1;
-
-        // add score to game obj
-        // game.pointsIncrease(game.scores[game.active()]);
-
-        // game.players[game.active].score
-        true;
+        return true;
       }
     }
   };
 
-  const reset = () => {
-    // clear gameBoard
-    game.gameBoard = [, , , , , , , ,];
+  const getEmptySpaces = () => {
+    let newIndexes = [];
+    const markedBoard = gameBoard.forEach((cell, i) => {
+      if (cell === '-') newIndexes.push(i);
+    });
 
-    // clear cells
-    cellsEL.forEach((cell) => (cell.innerHTML = ''));
+    const indexedNum = Math.trunc(Math.random() * newIndexes.length);
 
-    // set active player to 1
+    const newNum = newIndexes[indexedNum];
 
-    // change the active player color back to player 1
-    game.removeNameColor();
-    game.active('s');
-    game.changeNameColor();
-
-    // remove the color of the previous player
-    // remove win message and who won
-    gameBlurEl.classList.add('hide');
-    gameMessageEl.classList.add('hide');
-
-    // set game to true
-    game.playing = true;
+    if (newNum !== undefined) {
+      cellsEL[newNum].textContent = players[getActivePlayer()].markerUpper;
+      gameBoard[newNum] = '';
+      gameBoard[newNum] = players[1].markerUpper;
+    }
   };
 
-  const active = (reset) => {
-    if (!reset) return activeP;
-
-    if (reset) return (activeP = 0);
-  };
-
-  const changeNameColor = () => {
-    game.active() === 0
-      ? (playerOneEl.style.color = 'red')
-      : (playerTwoEl.style.color = 'red');
-  };
-
-  const removeNameColor = () => {
-    game.active() === 0
-      ? (playerOneEl.style.color = '')
-      : (playerTwoEl.style.color = '');
-  };
-
-  const switchPlayer = () => {
-    activeP = activeP === 0 ? 1 : 0;
+  const addRandomMarker = () => {
+    // console.log(getEmptySpaces().length);
   };
 
   return {
     playerOne,
     playerTwo,
-    gameBoard,
-    playing,
+    gameType,
     players,
+    playing,
+    getActivePlayer,
+    switchActivePlayer,
     checkWinner,
-    active,
-    reset,
-    changeNameColor,
-    removeNameColor,
-    switchPlayer,
-    pointsIncrease,
-    pointsDecrease,
+    getEmptySpaces,
+    addRandomMarker,
+    gameBoard,
   };
-})(tom, comp);
+})(tom, comp, 'easy');
 
-game.changeNameColor();
-playerOneEl.textContent = game.playerOne.nameUpper;
-playerTwoEl.textContent = game.playerTwo.nameUpper;
+playerOneNameEl.textContent = game.playerOne.nameUpper;
+playerTwoNameEl.textContent = game.playerTwo.nameUpper;
 
-cellsEL.forEach((cell) => {
+// Check draw
+// let roundDraw = !gameBoard.includes(undefined)
+
+playersEl[game.getActivePlayer()].style.color = 'red';
+cellsEL.forEach((cell) =>
   cell.addEventListener('click', (e) => {
     if (game.playing) {
-      if (game.playing && !e.target.innerText) {
-        // adds marker to gameBoard
-        game.gameBoard[+e.target.dataset.cell] =
-          game.players[game.active()].markerUpper;
-        // adds marker to UI
-        e.target.innerText = `${game.players[game.active()].markerUpper}`;
+      if (game.gameType === 'easy') {
+        if (e.target.textContent === '') {
+          // Show marker on UI
+          e.target.textContent =
+            game.players[game.getActivePlayer()].markerUpper;
+          // Remove previous player color
+          playersEl[game.getActivePlayer()].style.color = '';
+          // Add markers to GameBoard State
+          game.gameBoard[e.target.dataset.cell] =
+            game.players[game.getActivePlayer()].markerUpper;
 
-        if (game.checkWinner(game.gameBoard)) {
-          game.playing = false;
+          if (game.checkWinner()) {
+            game.playing = false;
+          }
+
+          // Switch player
+          game.switchActivePlayer();
+          const playerTimer = setTimeout(() => {
+            // Remove previous player color
+            playersEl[game.getActivePlayer()].style.color = '';
+
+            game.getEmptySpaces();
+            game.checkWinner();
+            game.switchActivePlayer();
+            playersEl[game.getActivePlayer()].style.color = 'red';
+          }, 500);
+
+          // Change active player color
+          playersEl[game.getActivePlayer()].style.color = 'red';
         }
-
-        let draw = !game.gameBoard.includes(undefined);
-
-        if (draw && game.playing) {
-          playerWonEl.textContent = `It's a tie`;
-          gameBlurEl.classList.toggle('hide');
-          gameMessageEl.classList.toggle('hide');
-          game.playing = false;
-        }
-
-        // game.checkWinner(game.gameBoard);
-        game.removeNameColor();
-        game.switchPlayer();
-        game.changeNameColor();
       }
     }
-  });
-});
-
-btnResetEl.addEventListener('click', (e) => {
-  game.reset();
-});
+  })
+);
