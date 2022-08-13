@@ -75,7 +75,9 @@ const game = ((playerOne, playerTwo, gameType) => {
       }
     }
   };
-
+  /**
+   * @function gets empty spaces then sets the second players marker in a random empty space
+   */
   const getEmptySpaces = () => {
     let newIndexes = [];
     const markedBoard = gameBoard.forEach((cell, i) => {
@@ -119,40 +121,95 @@ playerTwoNameEl.textContent = game.playerTwo.nameUpper;
 // let roundDraw = !gameBoard.includes(undefined)
 
 playersEl[game.getActivePlayer()].style.color = 'red';
-cellsEL.forEach((cell) =>
-  cell.addEventListener('click', (e) => {
-    if (game.playing) {
-      if (game.gameType === 'easy') {
-        if (e.target.textContent === '') {
-          // Show marker on UI
-          e.target.textContent =
-            game.players[game.getActivePlayer()].markerUpper;
-          // Remove previous player color
-          playersEl[game.getActivePlayer()].style.color = '';
-          // Add markers to GameBoard State
-          game.gameBoard[e.target.dataset.cell] =
-            game.players[game.getActivePlayer()].markerUpper;
+// cellsEL.forEach((cell) =>
+//   cell.addEventListener('click', (e) => {
+//     if (game.playing) {
+//       if (game.gameType === 'easy') {
+//         if (e.target.textContent === '') {
+//           if (game.getActivePlayer() === 0) {
+//             // Show marker on UI
+//             e.target.textContent =
+//               game.players[game.getActivePlayer()].markerUpper;
+//             // Remove previous player color
+//             playersEl[game.getActivePlayer()].style.color = '';
+//             // Add markers to GameBoard State
+//             game.gameBoard[e.target.dataset.cell] =
+//               game.players[game.getActivePlayer()].markerUpper;
 
-          if (game.checkWinner()) {
-            game.playing = false;
-          }
+//             if (game.checkWinner()) {
+//               game.playing = false;
+//             }
+//             // switch player
+//             game.switchActivePlayer();
+//             playersEl[game.getActivePlayer()].style.color = '';
+//           } else {
+//             playersEl[game.getActivePlayer()].style.color = 'red';
+//             const playerTimer = setTimeout(() => {
+//               // Remove previous player color
+//               game.getEmptySpaces();
+//               game.checkWinner();
+//               game.switchActivePlayer();
+//               playersEl[game.getActivePlayer()].style.color = '';
+//             }, 500);
+//           }
+//           // Change active player color
+//           playersEl[game.getActivePlayer()].style.color = 'red';
+//         }
+//       }
+//     }
+//   })
+// );
 
-          // Switch player
-          game.switchActivePlayer();
-          const playerTimer = setTimeout(() => {
+// if (game.playing) {
+//   if (game.gameType === 'easy') {
+//     if (game.getActivePlayer() === 0) {
+//       cellsEL.forEach((cell) => {
+//         cell.addEventListener('click', (e) => {
+//           if (e.target.textContent === '') {
+//             // Show marker on UI
+//             e.target.textContent =
+//               game.players[game.getActivePlayer()].markerUpper;
+//             // Remove previous player color
+//             playersEl[game.getActivePlayer()].style.color = '';
+//             // Add markers to GameBoard State
+//             game.gameBoard[e.target.dataset.cell] =
+//               game.players[game.getActivePlayer()].markerUpper;
+
+//             if (game.checkWinner()) {
+//               game.playing = false;
+//             }
+//             playersEl[game.getActivePlayer()].style.color = '';
+//             // switch player
+//             game.switchActivePlayer();
+//           }
+//         });
+//       });
+//     }
+//   }
+// }
+
+if (game.playing) {
+  if (game.gameType === 'easy') {
+    for (let i = 0; i < cellsEL.length; i++) {
+      if (game.getActivePlayer() === 0) {
+        cellsEL[i].addEventListener('click', (e) => {
+          if (e.target.textContent === '') {
+            // Show marker on UI
+            e.target.textContent =
+              game.players[game.getActivePlayer()].markerUpper;
             // Remove previous player color
             playersEl[game.getActivePlayer()].style.color = '';
+            // Add markers to GameBoard State
+            game.gameBoard[e.target.dataset.cell] =
+              game.players[game.getActivePlayer()].markerUpper;
 
-            game.getEmptySpaces();
-            game.checkWinner();
+            if (game.checkWinner()) {
+              game.playing = false;
+            }
             game.switchActivePlayer();
-            playersEl[game.getActivePlayer()].style.color = 'red';
-          }, 500);
-
-          // Change active player color
-          playersEl[game.getActivePlayer()].style.color = 'red';
-        }
+          }
+        });
       }
     }
-  })
-);
+  }
+}
