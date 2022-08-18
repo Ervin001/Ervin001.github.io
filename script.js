@@ -7,7 +7,32 @@ const GameBoard = (function (playerOne, playerTwo) {
     gameBoard = ['', '', '', '', '', '', '', '', ''];
   };
 
+  const setMarker = (index, marker) => {
+    gameBoard[index] = marker;
+  };
+
+  const getMarker = (index) => {
+    return gameBoard[index];
+  };
+
   return { gameBoard, clearBoard };
+})();
+
+const GameUI = (() => {
+  // Logic for manipulating DOM
+  const cellsEl = document.querySelectorAll('.cell');
+
+  cellsEl.forEach((cell) => {
+    cell.addEventListener('click', (e) => {
+      if (Game.isPlaying && e.target.textContent === '') {
+        Game.play(+e.target.dataset.cell);
+      }
+    });
+  });
+
+  const updateUI = () => {};
+
+  return {};
 })();
 
 const Game = (() => {
@@ -16,19 +41,25 @@ const Game = (() => {
   let playerOne = undefined;
   let playerTwo = undefined;
 
+  // Game will be here
   const start = (p1, p2) => {
+    playing = true;
     playerOne = p1;
     playerTwo = p2;
     currentPlayer = playerOne;
+  };
 
-    console.log(GameBoard.gameBoard);
+  const play = (index) => {
+    GameBoard.setMarker(index);
   };
 
   const switchPlayer = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
 
-  return { start };
+  const isPlaying = () => playing;
+
+  return { start, isPlaying };
 })();
 
 const Player = function (name, marker, type) {
