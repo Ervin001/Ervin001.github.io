@@ -61,6 +61,16 @@ const Game = (() => {
   let currentPlayer = undefined;
   let playerOne = undefined;
   let playerTwo = undefined;
+  const winningConditions = [
+    [0, 1, 2],
+    [0, 3, 6],
+    [0, 4, 8],
+    [3, 4, 5],
+    [6, 7, 8],
+    [1, 4, 7],
+    [2, 5, 8],
+    [2, 4, 6],
+  ];
 
   // Starting conditions
   const start = (p1, p2) => {
@@ -87,16 +97,20 @@ const Game = (() => {
   const isPlaying = () => playing;
 
   const checkWinner = () => {
-    const winningConditions = [
-      [0, 1, 2],
-      [0, 3, 6],
-      [0, 4, 8],
-      [3, 4, 5],
-      [6, 7, 8],
-      [1, 4, 7],
-      [2, 5, 8],
-      [2, 4, 6],
-    ];
+    for (let i = 0; i < winningConditions.length; i++) {
+      const winCondition = winningConditions[i];
+      let a = GameBoard.gameBoard[winCondition[0]];
+      let b = GameBoard.gameBoard[winCondition[1]];
+      let c = GameBoard.gameBoard[winCondition[2]];
+
+      if (a === '-' || b === '-' || c === '-') {
+        continue;
+      }
+
+      if (a === b && b === c) {
+        return true;
+      }
+    }
   };
 
   return { start, isPlaying, play };
