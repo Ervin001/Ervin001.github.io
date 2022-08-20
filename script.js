@@ -15,7 +15,28 @@ const GameBoard = (function (playerOne, playerTwo) {
     return gameBoard[index];
   };
 
-  return { gameBoard, clearBoard, setMarker, getMarker };
+  const getRandomSpace = () => {
+    const spaces = [];
+    const emptySpaces = gameBoard.filter((el, i) =>
+      el === '' ? spaces.push(i) : false
+    );
+
+    const randomNum = Math.trunc(Math.random() * spaces.length);
+    return spaces[randomNum];
+  };
+
+  const emptyIndexies = (board) => {
+    return board.filter((s, i) => (s === '' ? i : false));
+  };
+
+  return {
+    gameBoard,
+    clearBoard,
+    setMarker,
+    getMarker,
+    getRandomSpace,
+    emptyIndexies,
+  };
 })();
 
 const GameUI = (() => {
@@ -26,9 +47,15 @@ const GameUI = (() => {
 
   cellsEl.forEach((cell) => {
     cell.addEventListener('click', (e) => {
+      // Against player
       if (Game.isPlaying && e.target.textContent === '') {
-        Game.play(+e.target.dataset.cell);
-        updateUI();
+        if (Game.getCurrentPlayer().type === 'player') {
+          Game.play(+e.target.dataset.cell);
+          updateUI();
+        } else {
+          Game.play(+e.target.dataset.cell);
+          updateUI();
+        }
       }
     });
   });
@@ -79,6 +106,12 @@ const Game = (() => {
   let currentPlayer = undefined;
   let playerOne = undefined;
   let playerTwo = undefined;
+  let isComputer = undefined;
+
+  const computerPlaying = (playerType) => {
+    isComputer = playerType;
+  };
+
   const winningConditions = [
     [0, 1, 2],
     [0, 3, 6],
@@ -106,17 +139,36 @@ const Game = (() => {
     if (playing) {
       GameBoard.setMarker(index, currentPlayer.marker);
       checkWinner();
-      if (playing) {
+
+      if (playing && !isComputer) {
         switchPlayer();
         GameUI.currentPlayerColor(currentPlayer.marker);
         checkTie();
+        GameBoard.getRandomSpace();
+      }
+
+      if (playing && isComputer) {
+        switchPlayer();
+        GameUI.currentPlayerColor(currentPlayer.marker);
+        easyCpu();
+        checkWinner();
+        checkTie();
+        switchPlayer();
+        GameUI.currentPlayerColor(currentPlayer.marker);
       }
     }
   };
 
+  const miniMax = (newBoard, player) => {};
+
+  const time = () => {};
+
   const switchPlayer = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
   };
+
+  const returnPlayerOne = () => playerOne;
+  const returnPlayerTwo = () => playerTwo;
 
   const isPlaying = () => playing;
 
@@ -145,21 +197,38 @@ const Game = (() => {
     }
   };
 
-  return { start, isPlaying, play };
+  const easyCpu = () => {
+    GameBoard.gameBoard[GameBoard.getRandomSpace()] = currentPlayer.marker;
+  };
+
+  const getCurrentPlayer = () => currentPlayer;
+
+  return {
+    start,
+    isPlaying,
+    play,
+    computerPlaying,
+    getCurrentPlayer,
+    returnPlayerOne,
+    returnPlayerTwo,
+  };
 })();
 
+// Factory for players
 const Player = function (name, marker, type) {
   return { name, marker, type };
 };
 
-(function vsPlayer() {
-  const playerOne = Player('Rick', 'X', 'player');
-  const playerTwo = Player('John', 'O', 'player');
-  Game.start(playerOne, playerTwo);
-})();
-
-// (function vsCPU() {
+// (function vsPlayer() {
 //   const playerOne = Player('Rick', 'X', 'player');
-//   const playerTwo = Player('Computer', 'O', 'cpu');
+//   const playerTwo = Player('John', 'O', 'player');
+//   Game.computerPlaying(false);
 //   Game.start(playerOne, playerTwo);
 // })();
+
+(function vsCPU() {
+  const playerOne = Player('Tom', 'X', 'player');
+  const playerTwo = Player('Computer', 'O', 'cpu');
+  Game.computerPlaying(true);
+  Game.start(playerOne, playerTwo);
+})();
