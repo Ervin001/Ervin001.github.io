@@ -53,7 +53,25 @@ const GameUI = (() => {
       : ((name2.style.color = ''), (name2.style.fontSize = ''));
   };
 
-  return { updateNames, currentPlayerColor };
+  const gameOverMsg = (winner) => {
+    const gameOverContainerEl = document.querySelector('.game-message');
+    const winnerNameEl = document.querySelector('.player-won');
+    const gameBlurEl = document.querySelector('.game-blur');
+
+    if (winner !== undefined) {
+      gameBlurEl.classList.remove('hide');
+      gameOverContainerEl.classList.remove('hide');
+      winnerNameEl.textContent = `${winner} has Won`;
+    }
+
+    if (winner === undefined) {
+      gameBlurEl.classList.remove('hide');
+      gameOverContainerEl.classList.remove('hide');
+      winnerNameEl.textContent = 'It is a tie';
+    }
+  };
+
+  return { updateNames, currentPlayerColor, gameOverMsg };
 })();
 
 const Game = (() => {
@@ -85,9 +103,15 @@ const Game = (() => {
 
   //  Game will take place here
   const play = (index) => {
-    GameBoard.setMarker(index, currentPlayer.marker);
-    switchPlayer();
-    GameUI.currentPlayerColor(currentPlayer.marker);
+    if (playing) {
+      GameBoard.setMarker(index, currentPlayer.marker);
+      checkWinner();
+      if (playing) {
+        switchPlayer();
+        GameUI.currentPlayerColor(currentPlayer.marker);
+        checkTie();
+      }
+    }
   };
 
   const switchPlayer = () => {
@@ -103,13 +127,21 @@ const Game = (() => {
       let b = GameBoard.gameBoard[winCondition[1]];
       let c = GameBoard.gameBoard[winCondition[2]];
 
-      if (a === '-' || b === '-' || c === '-') {
+      if (a === '' || b === '' || c === '') {
         continue;
       }
 
       if (a === b && b === c) {
-        return true;
+        playing = false;
+        GameUI.gameOverMsg(currentPlayer.name);
       }
+    }
+  };
+
+  const checkTie = () => {
+    const result = GameBoard.gameBoard.filter((indx) => indx === '');
+    if (result.length <= 0) {
+      GameUI.gameOverMsg();
     }
   };
 
