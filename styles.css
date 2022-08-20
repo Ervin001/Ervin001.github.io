@@ -19,6 +19,34 @@ body {
   height: 100vh;
 }
 
+.option-cards {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.play-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  flex-grow: 6;
+}
+
+.p-o {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 20rem;
+  width: 20rem;
+  background-color: #9e2a2b;
+  color: #fff3b0;
+  font-size: 3rem;
+}
+
 .container {
   display: flex;
   font-family: 'Secular One', sans-serif;
@@ -38,6 +66,11 @@ body {
   margin-top: 2rem;
   font-size: 8rem;
   color: #fff3b0;
+}
+
+.main {
+  text-align: center;
+  flex-grow: 1;
 }
 
 .players {
