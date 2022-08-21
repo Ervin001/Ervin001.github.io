@@ -219,16 +219,25 @@ const Player = function (name, marker, type) {
   return { name, marker, type };
 };
 
-// (function vsPlayer() {
-//   const playerOne = Player('Rick', 'X', 'player');
-//   const playerTwo = Player('John', 'O', 'player');
-//   Game.computerPlaying(false);
-//   Game.start(playerOne, playerTwo);
-// })();
+const playerButtonEl = document.querySelector('.player-v-player');
+const computerButtonEl = document.querySelector('.player-v-cpu');
+const firstContainerEl = document.querySelector('.contnr');
+const secondContainerEl = document.querySelector('.container');
 
-(function vsCPU() {
-  const playerOne = Player('Tom', 'X', 'player');
+playerButtonEl.addEventListener('click', () => {
+  firstContainerEl.classList.add('hide');
+  secondContainerEl.classList.remove('hide');
+  const playerOne = Player('PLayer 1', 'X', 'player');
+  const playerTwo = Player('Player 2', 'O', 'player');
+  Game.computerPlaying(false);
+  Game.start(playerOne, playerTwo);
+});
+
+computerButtonEl.addEventListener('click', () => {
+  firstContainerEl.classList.add('hide');
+  secondContainerEl.classList.remove('hide');
+  const playerOne = Player('Player 1', 'X', 'player');
   const playerTwo = Player('Computer', 'O', 'cpu');
   Game.computerPlaying(true);
   Game.start(playerOne, playerTwo);
-})();
+});
