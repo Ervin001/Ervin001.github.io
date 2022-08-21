@@ -4,7 +4,11 @@ const GameBoard = (function (playerOne, playerTwo) {
   let gameBoard = ['', '', '', '', '', '', '', '', ''];
 
   const clearBoard = () => {
-    gameBoard = ['', '', '', '', '', '', '', '', ''];
+    return (gameBoard = ['', '', '', '', '', '', '', '', '']);
+  };
+
+  const getBoard = () => {
+    return gameBoard;
   };
 
   const setMarker = (index, marker) => {
@@ -36,6 +40,7 @@ const GameBoard = (function (playerOne, playerTwo) {
     getMarker,
     getRandomSpace,
     emptyIndexies,
+    getBoard,
   };
 })();
 
@@ -71,6 +76,20 @@ const GameUI = (() => {
     name2.textContent = n2;
   };
 
+  const clearBoardUI = () => {
+    cellsEl.forEach((cell) => {
+      cell.textContent = '';
+    });
+  };
+
+  const backToOptionsUI = () => {
+    const containerEl = document.querySelector('.container');
+    const optionsCntEl = document.querySelector('.contnr');
+
+    containerEl.classList.add('hide');
+    optionsCntEl.classList.remove('hide');
+  };
+
   const currentPlayerColor = (currPlayer) => {
     currPlayer === 'X'
       ? ((name1.style.color = 'red'), (name1.style.fontSize = '3.5rem'))
@@ -80,11 +99,11 @@ const GameUI = (() => {
       : ((name2.style.color = ''), (name2.style.fontSize = ''));
   };
 
-  const gameOverMsg = (winner) => {
-    const gameOverContainerEl = document.querySelector('.game-message');
-    const winnerNameEl = document.querySelector('.player-won');
-    const gameBlurEl = document.querySelector('.game-blur');
+  const gameOverContainerEl = document.querySelector('.game-message');
+  const winnerNameEl = document.querySelector('.player-won');
+  const gameBlurEl = document.querySelector('.game-blur');
 
+  const gameOverMsg = (winner) => {
     if (winner !== undefined) {
       gameBlurEl.classList.remove('hide');
       gameOverContainerEl.classList.remove('hide');
@@ -98,7 +117,21 @@ const GameUI = (() => {
     }
   };
 
-  return { updateNames, currentPlayerColor, gameOverMsg };
+  const clearWinnerMsg = () => {
+    winnerNameEl.textContent = '';
+
+    gameOverContainerEl.classList.add('hide');
+    gameBlurEl.classList.add('hide');
+  };
+
+  return {
+    updateNames,
+    currentPlayerColor,
+    gameOverMsg,
+    clearBoardUI,
+    clearWinnerMsg,
+    backToOptionsUI,
+  };
 })();
 
 const Game = (() => {
@@ -159,9 +192,16 @@ const Game = (() => {
     }
   };
 
-  const miniMax = (newBoard, player) => {};
+  const resetBoard = () => {
+    playing = true;
+    currentPlayer = playerOne;
+    GameUI.currentPlayerColor(currentPlayer.marker);
+    GameBoard.clearBoard();
+    GameUI.clearBoardUI();
+    GameUI.clearWinnerMsg();
+  };
 
-  const time = () => {};
+  // const miniMax = (newBoard, player) => {};
 
   const switchPlayer = () => {
     currentPlayer = currentPlayer === playerOne ? playerTwo : playerOne;
@@ -175,9 +215,9 @@ const Game = (() => {
   const checkWinner = () => {
     for (let i = 0; i < winningConditions.length; i++) {
       const winCondition = winningConditions[i];
-      let a = GameBoard.gameBoard[winCondition[0]];
-      let b = GameBoard.gameBoard[winCondition[1]];
-      let c = GameBoard.gameBoard[winCondition[2]];
+      let a = GameBoard.getBoard()[winCondition[0]];
+      let b = GameBoard.getBoard()[winCondition[1]];
+      let c = GameBoard.getBoard()[winCondition[2]];
 
       if (a === '' || b === '' || c === '') {
         continue;
@@ -191,14 +231,14 @@ const Game = (() => {
   };
 
   const checkTie = () => {
-    const result = GameBoard.gameBoard.filter((indx) => indx === '');
+    const result = GameBoard.getBoard().filter((indx) => indx === '');
     if (result.length <= 0) {
       GameUI.gameOverMsg();
     }
   };
 
   const easyCpu = () => {
-    GameBoard.gameBoard[GameBoard.getRandomSpace()] = currentPlayer.marker;
+    GameBoard.getBoard()[GameBoard.getRandomSpace()] = currentPlayer.marker;
   };
 
   const getCurrentPlayer = () => currentPlayer;
@@ -211,6 +251,7 @@ const Game = (() => {
     getCurrentPlayer,
     returnPlayerOne,
     returnPlayerTwo,
+    resetBoard,
   };
 })();
 
@@ -240,4 +281,16 @@ computerButtonEl.addEventListener('click', () => {
   const playerTwo = Player('Computer', 'O', 'cpu');
   Game.computerPlaying(true);
   Game.start(playerOne, playerTwo);
+});
+
+const resetEl = document.querySelector('.reset');
+const backEl = document.querySelector('.start-over');
+
+resetEl.addEventListener('click', () => {
+  Game.resetBoard();
+});
+
+backEl.addEventListener('click', () => {
+  Game.resetBoard();
+  GameUI.backToOptionsUI();
 });
