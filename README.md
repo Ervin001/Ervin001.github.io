@@ -4,4 +4,4 @@
 
 #### The goal of this project:
 
-Make a simple tic-tac-toe game using **_factory functions_** and **_IIFE_**. Also trying to implement minimax and maxinini to make an algorithm to play Player vs. Computer
+Make a simple tic-tac-toe game using **_factory functions_** and **_IIFE_**. Implemented a simple AI that fills a random empty space
